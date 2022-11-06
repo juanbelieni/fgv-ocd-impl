@@ -1,0 +1,82 @@
+
+% Setup
+\documentclass[a4paper, 11pt]{article}
+
+
+% Brazilian Portuguese
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Bibliography
+% \usepackage[backend=biber,style=authoryear-icomp]{biblatex}
+
+% Packages
+\usepackage{graphicx} % Enables adding figures
+\usepackage{subcaption} % Enables figures side-by-side
+\usepackage{booktabs} % Makes nicer tables
+\usepackage{geometry} % Let's you adjust the margins
+\usepackage{setspace} % Let's you change the line spacing
+\usepackage{hyperref} % Let's you add links (\url{<link>}) and clickable labels to naviguate through the document
+\usepackage{microtype} % Improves the typesetting of your document by managing better the space between letters, hyphens etc.
+\usepackage{parskip} % Improves the spacing between paragraphs
+\usepackage{amsfonts} % Adds some math fonts
+
+% Shortcuts
+\newcommand{\R}{\mathbb{R}} % Shortcut for the set of real numbers
+\newcommand{\eps}{\varepsilon} % Shortcut for the epsilon symbol
+
+% Info
+\author{Juan Belieni}
+\title{Relatório: implementando o algoritmo de \textit{fuzzy c-means} em Python}
+\date{\today}
+
+% Document
+\begin{document}
+
+\maketitle
+\onehalfspacing
+
+% TODO: cite Bartak & Jastrzębska (2022)
+\section{O algoritmo de \textit{fuzzy c-means}}
+
+O algoritmo de \textit{fuzzy c-means} é um algoritmo baseado no tradicional algoritmo de \textit{k-means}.
+Nele, cada ponto pode estar associado a mais de um cluster, com uma certa probabilidade, que deve somar 1.
+
+No algoritmo, uma matriz de particionamento $U \in [0, 1]^{C \times P}$ é criada, onde $C$ é o número de clusters e $P$ é o número de pontos.
+Cada elemento $u_{ij}$ da matriz representa a probabilidade do $i$-ésimo ponto pertencer ao $j$-ésimo cluster.
+Também é definido um vetor $\mathbf v \in \mathbb R^{C \times M}$, que representa os centróides dos clusters, onde $M$ é a dimensão dos pontos.
+A clusterização é controlada por um parâmetro $m \in [1, \infty)$, chamado de coeficiente de fuzzificação.
+
+O \textit{fuzzy c-means} é um algoritmo iterativo, e busca minimizar a função objetivo
+
+\begin{equation}
+J = \sum_{i=1}^P \sum_{j=1}^C u_{ij}^m \| \mathbf z_i - \mathbf v_j \|^2,
+\end{equation}
+
+onde $\mathbf z_i$ é o $i$-ésimo ponto e $\mathbf v_j$ é o centro do $j$-ésimo cluster.
+Para que essa minimização seja feita, o algoritmo define, a cada iteração, novos valores para a matriz de particionamento $U$ e para os centros dos clusters $\mathbf v$ da seguinte forma:
+
+\begin{equation}
+u_{ij} = \frac{1}{\sum_{k=1}^C \left( \frac{\| \mathbf z_i - \mathbf v_j \|}{\| \mathbf z_i - \mathbf v_k \|} \right)^{\frac{2}{m-1}}}.
+\end{equation}
+
+e
+
+\begin{equation}
+\mathbf v_j = \frac{\sum_{i=1}^P u_{ij}^m \mathbf z_i}{\sum_{i=1}^P u_{ij}^m}.
+\end{equation}
+
+A cada iteração, o algoritmo verifica se $J^{(k + 1)} - J^k < \eps$, onde $\eps$ é um parâmetro de tolerância.
+
+\section{Implementação}
+
+A implementação do algoritmo de \textit{fuzzy c-means} foi feita em Python, utilizando a biblioteca \textit{numpy} para a manipulação de matrizes e vetores.
+
+
+
+\section{Métodos}
+
+\section{Resultados}
+
+\end{document}
